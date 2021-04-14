@@ -421,7 +421,7 @@ class FreqtradeBot(LoggingMixin):
                 logger.warning(
                     "Buy Price from orderbook could not be determined."
                     f"Orderbook: {order_book}"
-                 )
+                )
                 raise PricingError from e
             logger.info(f"Buy price from orderbook {bid_strategy['price_side'].capitalize()} side "
                         f"- top {order_book_top} order book buy rate {rate_from_l2:.8f}")
@@ -430,6 +430,8 @@ class FreqtradeBot(LoggingMixin):
             logger.info(f"Using Last {bid_strategy['price_side'].capitalize()} / Last Price")
             ticker = self.exchange.fetch_ticker(pair)
             ticker_rate = ticker[bid_strategy['price_side']]
+            if not ticker_rate:
+                ticker_rate = float(ticker['info']['trade_price'])
             if ticker['last'] and ticker_rate > ticker['last']:
                 balance = bid_strategy['ask_last_balance']
                 ticker_rate = ticker_rate + balance * (ticker['last'] - ticker_rate)
@@ -744,6 +746,9 @@ class FreqtradeBot(LoggingMixin):
         else:
             ticker = self.exchange.fetch_ticker(pair)
             ticker_rate = ticker[ask_strategy['price_side']]
+            if not ticker_rate:
+                ticker_rate = float(ticker['info']['trade_price'])
+
             if ticker['last'] and ticker_rate < ticker['last']:
                 balance = ask_strategy.get('bid_last_balance', 0.0)
                 ticker_rate = ticker_rate - balance * (ticker_rate - ticker['last'])
