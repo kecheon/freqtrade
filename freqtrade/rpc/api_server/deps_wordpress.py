@@ -2,6 +2,7 @@ import secrets
 from typing import Dict, Tuple
 import requests
 from sqlalchemy.sql.sqltypes import Boolean
+import os
 
 def verify_auth_from_wordpress_api(api_config, username: str, password: str):
   # authenticate from bitsbee.io api
@@ -13,13 +14,15 @@ def verify_auth_from_wordpress_api(api_config, username: str, password: str):
 
 
 def login_user(data: Dict[str, str]) -> Boolean:
+        auth_key_for_bitsbee = os.getenv('AUTH_KEY_BITSBEE')
         try:
             # fetch jwt from bitsbee.io API(wordpress jwt auth api)
             endpoint = 'https://bitsbee.io'
             params = {
                 "rest_route": "/simple-jwt-login/v1/auth",
                 "email": data.get('username'),
-                "password": data.get('password')
+                "password": data.get('password'),
+                "AUTH_KEY": auth_key_for_bitsbee
             }
 
             res = requests.post(endpoint, data=params)
