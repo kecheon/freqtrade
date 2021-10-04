@@ -8,7 +8,7 @@ from fastapi.security.http import HTTPBasic, HTTPBasicCredentials
 
 from freqtrade.rpc.api_server.api_schemas import AccessAndRefreshToken, AccessToken
 from freqtrade.rpc.api_server.deps import get_api_config
-
+from freqtrade.rpc.api_server.deps_wordpress import verify_auth_from_wordpress_api
 
 ALGORITHM = "HS256"
 
@@ -79,7 +79,8 @@ def http_basic_or_jwt_token(form_data: HTTPBasicCredentials = Depends(httpbasic)
 def token_login(form_data: HTTPBasicCredentials = Depends(HTTPBasic()),
                 api_config=Depends(get_api_config)):
 
-    if verify_auth(api_config, form_data.username, form_data.password):
+    #if verify_auth(api_config, form_data.username, form_data.password):
+    if verify_auth_from_wordpress_api(api_config, form_data.username, form_data.password):
         token_data = {'identity': {'u': form_data.username}}
         access_token = create_token(token_data, api_config.get('jwt_secret_key', 'super-secret'))
         refresh_token = create_token(token_data, api_config.get('jwt_secret_key', 'super-secret'),
