@@ -8,7 +8,8 @@ from freqtrade.rpc.api_server.webserver import ApiServer
 from freqtrade.rpc.rpc import RPC
 from freqtrade.state import RunMode
 from tests.conftest import get_patched_freqtradebot
-from tests.rpc.test_rpc_apiserver import assert_response, BASE_URI
+from tests.rpc.test_rpc_apiserver import BASE_URI, assert_response
+
 _TEST_USER = 'kecheon@gmail.com'
 _TEST_PASS = 'dmdcjs0'
 
@@ -44,5 +45,10 @@ def test_wordpress_auth_api(botclient):
                      data=None,
                      headers={'Authorization': _basic_auth_str('WRONG_USER', 'WRONG_PASS'),
                               'Origin': 'http://example.com'})
+  assert_response(rc, 401)
+  rc = client.post(f"{BASE_URI}/token/login",
+                     data=None,
+                     headers={'Authorization': _basic_auth_str(_TEST_USER, _TEST_PASS),
+                              'Origin': 'http://another.com'})
   assert_response(rc, 401)
 

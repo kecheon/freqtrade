@@ -3,14 +3,19 @@ from typing import Dict, Tuple
 import requests
 from sqlalchemy.sql.sqltypes import Boolean
 import os
+import urllib.parse
 
-def verify_auth_from_wordpress_api(api_config, username: str, password: str):
+def verify_auth_from_wordpress_api(api_config, username: str, password: str, request_url):
   # authenticate from bitsbee.io api
-  data = {
-    "username": username,
-    "password": password
-  }
-  return login_user(data)
+  parsed_url = urllib.parse.urlparse(request_url)
+  if parsed_url.netloc != username.replace('@', 'at').replace('.', 'dot'):
+      return False
+  else:
+    data = {
+        "username": username,
+        "password": password
+    }
+    return login_user(data)
 
 
 def login_user(data: Dict[str, str]) -> Boolean:

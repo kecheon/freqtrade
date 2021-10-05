@@ -5,6 +5,7 @@ import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.http import HTTPBasic, HTTPBasicCredentials
+from starlette.requests import Request
 
 from freqtrade.rpc.api_server.api_schemas import AccessAndRefreshToken, AccessToken
 from freqtrade.rpc.api_server.deps import get_api_config
@@ -76,11 +77,11 @@ def http_basic_or_jwt_token(form_data: HTTPBasicCredentials = Depends(httpbasic)
 
 
 @router_login.post('/token/login', response_model=AccessAndRefreshToken)
-def token_login(form_data: HTTPBasicCredentials = Depends(HTTPBasic()),
+def token_login(request: Request, form_data: HTTPBasicCredentials = Depends(HTTPBasic()),
                 api_config=Depends(get_api_config)):
 
     #if verify_auth(api_config, form_data.username, form_data.password):
-    if verify_auth_from_wordpress_api(api_config, form_data.username, form_data.password):
+    if verify_auth_from_wordpress_api(api_config, form_data.username, form_data.password, request.url._url):
         token_data = {'identity': {'u': form_data.username}}
         access_token = create_token(token_data, api_config.get('jwt_secret_key', 'super-secret'))
         refresh_token = create_token(token_data, api_config.get('jwt_secret_key', 'super-secret'),
