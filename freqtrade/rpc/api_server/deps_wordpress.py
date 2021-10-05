@@ -8,7 +8,7 @@ import urllib.parse
 def verify_auth_from_wordpress_api(api_config, username: str, password: str, request_url):
   # authenticate from bitsbee.io api
   parsed_url = urllib.parse.urlparse(request_url)
-  if parsed_url.netloc != username.replace('@', 'at').replace('.', 'dot'):
+  if parsed_url.netloc != username.replace('@', 'at').replace('.', 'dot') + '.bitsbee.io':
       return False
   else:
     data = {
