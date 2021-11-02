@@ -10,8 +10,8 @@ from freqtrade.state import RunMode
 from tests.conftest import get_patched_freqtradebot
 from tests.rpc.test_rpc_apiserver import BASE_URI, assert_response
 
-_TEST_USER = 'kecheon@gmail.com'
-_TEST_PASS = 'dmdcjs0'
+_TEST_USER = 'test@gmail.com'
+_TEST_PASS = 'test'
 
 @pytest.fixture
 def botclient(default_conf, mocker):
