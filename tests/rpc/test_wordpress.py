@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 from requests.auth import _basic_auth_str
 from starlette.testclient import TestClient
+from freqtrade.freqtradebot import FreqtradeBot
 from freqtrade.loggers import setup_logging, setup_logging_pre
 from freqtrade.rpc.api_server.webserver import ApiServer
 from freqtrade.rpc.api_server.api_auth import token_login
@@ -52,3 +53,15 @@ def test_wordpress_auth_api(botclient, mocker):
                               'Origin': 'http://another.com'})
     assert_response(rc, 401, False)
 
+from freqtrade.rpc.api_server import deps_wordpress
+from unittest.mock import patch
+
+@patch.object(deps_wordpress, 'login_user')
+def test_login_user(mock_deps, botclient):
+  ftbot, client = botclient
+  rc = client.post(f"{BASE_URI}/token/login",
+                     data=None,
+                     headers={'Authorization': _basic_auth_str(_TEST_USER, _TEST_PASS),
+                              'Origin': 'http://another.com'})
+                            
+  mock_deps.assert_called_with({ 'username': _TEST_USER, 'password': _TEST_PASS })
