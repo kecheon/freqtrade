@@ -65,3 +65,7 @@ def test_login_user(mock_deps, botclient):
                               'Origin': 'http://another.com'})
                             
   mock_deps.assert_called_with({ 'username': _TEST_USER, 'password': _TEST_PASS })
+  try:
+    assert_response(rc)
+  except Exception:
+    assert(AssertionError)

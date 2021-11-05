@@ -157,6 +157,9 @@ def test_api_unauthorized(botclient):
     assert rc.json() == {'detail': 'Unauthorized'}
 
 
+from freqtrade.rpc.api_server import deps_wordpress
+from unittest.mock import patch
+
 def test_api_token_login(botclient):
     ftbot, client = botclient
     rc = client.post(f"{BASE_URI}/token/login",
@@ -164,10 +167,14 @@ def test_api_token_login(botclient):
                      headers={'Authorization': _basic_auth_str('WRONG_USER', 'WRONG_PASS'),
                               'Origin': 'http://example.com'})
     assert_response(rc, 401)
-    rc = client_post(client, f"{BASE_URI}/token/login")
-    assert_response(rc)
-    assert 'access_token' in rc.json()
-    assert 'refresh_token' in rc.json()
+    with patch.object(deps_wordpress, 'login_user', return_value=True):
+        rc = client.post(f"{BASE_URI}/token/login",
+                     data=None,
+                     headers={'Authorization': _basic_auth_str(_TEST_USER, _TEST_PASS),
+                              'Origin': 'http://example.com'})
+        assert_response(rc)
+        assert 'access_token' in rc.json()
+        assert 'refresh_token' in rc.json()
 
     # test Authentication is working with JWT tokens too
     rc = client.get(f"{BASE_URI}/count",
