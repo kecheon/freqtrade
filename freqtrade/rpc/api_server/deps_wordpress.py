@@ -5,12 +5,8 @@ from sqlalchemy.sql.sqltypes import Boolean
 import os
 import urllib.parse
 
+
 def verify_auth_from_wordpress_api(api_config, username: str, password: str, request_url):
-  # authenticate from bitsbee.io api
-#  parsed_url = urllib.parse.urlparse(request_url)
-#  if parsed_url.netloc != username.replace('@', 'at').replace('.', 'dot') + '.bitsbee.io':
-#      return False
-#  else:
     data = {
         "username": username,
         "password": password,
@@ -20,11 +16,8 @@ def verify_auth_from_wordpress_api(api_config, username: str, password: str, req
 
 
 def login_user(data: Dict[str, str]) -> Boolean:
-    # auth_key is disabled in bitsbee.io
-    # auth_key_for_bitsbee = os.getenv('AUTH_KEY_BITSBEE')
     try:
-        # fetch jwt from bitsbee.io API(wordpress jwt auth api)
-        endpoint = 'https://api.bitsbee.io/auth/login'
+        endpoint = os.getenv('BOT_CONFIG_API') + '/auth/login'
         params = {
             "username": data.get('username'),
             "password": data.get('password'),
