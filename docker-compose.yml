@@ -24,7 +24,7 @@ services:
     # Default command used when running `docker compose up`
     command: >
       trade
-      --db-url mysql://root:dmdcjs0@userdata/test
+      --db-url mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@userdata/test
       --logfile /freqtrade/user_data/logs/freqtrade.log
       --config /freqtrade/user_data/config_upbit.json
       --strategy EMASkipPump
