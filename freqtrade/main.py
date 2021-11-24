@@ -6,7 +6,8 @@ Read the documentation to know what cli arguments you need.
 import logging
 import sys
 from typing import Any, List
-
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # check min. python version
 if sys.version_info < (3, 7):

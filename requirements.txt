@@ -41,4 +41,5 @@ colorama==0.4.4
 # Building config files interactively
 questionary==1.9.0
 prompt-toolkit==3.0.18
-mysqlclient==2.1.0
+# mysqlclient==2.1.0
+pymysql==1.0.2
