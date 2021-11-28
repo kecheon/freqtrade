@@ -67,7 +67,7 @@ def http_basic_or_jwt_token(form_data: HTTPBasicCredentials = Depends(httpbasic)
                             token: str = Depends(oauth2_scheme),
                             api_config=Depends(get_api_config)):
     if token:
-        return get_user_from_token(token, os.getenv('jwt_secret_key'))
+        return get_user_from_token(token, os.getenv('JWT_SECRET_KEY'))
     elif form_data and verify_auth(api_config, form_data.username, form_data.password):
         return form_data.username
 
@@ -84,8 +84,8 @@ def token_login(request: Request, form_data: HTTPBasicCredentials = Depends(HTTP
     # if verify_auth(api_config, form_data.username, form_data.password):
     if verify_auth_from_wordpress_api(api_config, form_data.username, form_data.password, request.url._url):
         token_data = {'identity': {'u': form_data.username}}
-        access_token = create_token(token_data, os.getenv('jwt_secret_key'))
-        refresh_token = create_token(token_data, os.getenv('jwt_secret_key'),
+        access_token = create_token(token_data, os.getenv('JWT_SECRET_KEY'))
+        refresh_token = create_token(token_data, os.getenv('JWT_SECRET_KEY'),
                                      token_type="refresh")
         return {
             "access_token": access_token,
@@ -102,8 +102,8 @@ def token_login(request: Request, form_data: HTTPBasicCredentials = Depends(HTTP
 def token_refresh(token: str = Depends(oauth2_scheme), api_config=Depends(get_api_config)):
     # Refresh token
     u = get_user_from_token(token, os.getenv(
-        'jwt_secret_key'), 'refresh')
+        'JWT_SECRET_KEY'), 'refresh')
     token_data = {'identity': {'u': u}}
-    access_token = create_token(token_data, api_config.get('jwt_secret_key', 'super-secret'),
+    access_token = create_token(token_data, api_config.get('JWT_SECRET_KEY', 'super-secret'),
                                 token_type="access")
     return {'access_token': access_token}

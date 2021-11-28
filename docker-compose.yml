@@ -2,7 +2,7 @@
 version: "3"
 services:
   freqtrade:
-    image: kecheon/freqtrade-bitsbee:test
+    image: freqtrade-bitsbee:test
       # image: freqtradeorg/freqtrade:stable
     # image: freqtradeorg/freqtrade:develop
     # Use plotting image
@@ -12,7 +12,8 @@ services:
     #   context: .
     #   dockerfile: "./docker/Dockerfile.custom"
     environment:
-      - jwt_secret_key=dkssudqlemrwl
+      - JWT_SECRET_KEY=dkssudqlemrwl
+      - BOT_CONFIG_API=https://api.bitsbee.io
     restart: unless-stopped
     container_name: freqtrade
     volumes:
@@ -21,7 +22,7 @@ services:
     # Please read the https://www.freqtrade.io/en/latest/rest-api/ documentation
     # before enabling this.
     ports:
-      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8080:8090"
     # Default command used when running `docker compose up`
     command: >
       trade
