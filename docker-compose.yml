@@ -2,7 +2,7 @@
 version: "3"
 services:
   freqtrade:
-    image: kecheon/freqtrade-bitsbee:api-auth
+    image: kecheon/freqtrade-bitsbee:test
       # image: freqtradeorg/freqtrade:stable
     # image: freqtradeorg/freqtrade:develop
     # Use plotting image
@@ -11,6 +11,8 @@ services:
     # build:
     #   context: .
     #   dockerfile: "./docker/Dockerfile.custom"
+    environment:
+      - jwt_secret_key=dkssudqlemrwl
     restart: unless-stopped
     container_name: freqtrade
     volumes:

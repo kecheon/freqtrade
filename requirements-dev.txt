@@ -17,4 +17,4 @@ isort==5.8.0
 
 # Convert jupyter notebooks to markdown documents
 nbconvert==6.0.7
-mysqlclient==2.1.0
+# mysqlclient==2.1.0
