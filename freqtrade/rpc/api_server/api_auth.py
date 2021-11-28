@@ -49,7 +49,7 @@ def get_user_from_token(token, secret_key: str, token_type: str = "access"):
 def create_token(data: dict, secret_key: str, token_type: str = "access") -> str:
     to_encode = data.copy()
     if token_type == "access":
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.utcnow() + timedelta(minutes=60)
     elif token_type == "refresh":
         expire = datetime.utcnow() + timedelta(days=3)
     else:
